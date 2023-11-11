@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="ComboBoxTreeView.Demo.MainUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ComboBoxTreeView.Demo"
+             xmlns:tv="clr-namespace:Controls;assembly=Controls"
+             mc:Ignorable="d"          
+             d:DesignHeight="50" d:DesignWidth="180">
+    <FrameworkElement.DataContext>
+        <local:MainViewModel></local:MainViewModel>
+    </FrameworkElement.DataContext>
+    <FrameworkElement.Resources>
+        <ResourceDictionary>
+            <HierarchicalDataTemplate x:Key="treeViewDataTemplate" ItemsSource="{Binding Children}">
+                <Border Width="70" Height="25"  BorderThickness="1" Background="GhostWhite">
+                    <TextBlock Text="{Binding Title}"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Border>
+            </HierarchicalDataTemplate>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Controls;component/ComboBoxTreeView.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </FrameworkElement.Resources>
+    
+    <Grid>
+        <tv:ComboBoxTreeView 
+
+                             ParentPath="Parent"
+                             ItemsSource="{Binding Items}" 
+                             SelectedItem="{Binding SelectedItem}"  
+                             ItemTemplate="{StaticResource treeViewDataTemplate}" >
+        </tv:ComboBoxTreeView>
+    </Grid>
+</UserControl>
