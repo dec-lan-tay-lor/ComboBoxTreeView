@@ -26,6 +26,15 @@ namespace ComboBoxTreeView.Demo
 
         public List<TreeViewModel> Children { get; set; }
 
+        public bool IsChecked
+        {
+            get => isChecked; set
+            {
+                isChecked = value;
+                this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(IsChecked)));
+            }
+        }
+
         #region ITreeViewItemModel
         public string SelectedValuePath
         {
@@ -50,6 +59,7 @@ namespace ComboBoxTreeView.Demo
         }
 
         private bool isSelected;
+        private bool isChecked;
 
         public bool IsSelected
         {

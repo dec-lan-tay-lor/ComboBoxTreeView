@@ -23,7 +23,7 @@
         </ResourceDictionary>
     </FrameworkElement.Resources>
     
-    <Grid>
+    <UniformGrid Columns="1">
         <tv:ComboBoxTreeView x:Name="ComboBoxTreeView"
 
                              ParentPath="Parent"
@@ -31,7 +31,19 @@
                              SelectedItem="{Binding SelectedItem}"  
                              ItemTemplate="{StaticResource treeViewDataTemplate}" >
         </tv:ComboBoxTreeView>
-    </Grid>
+        <tv:ComboBoxTreeView x:Name="ComboBoxCheckedTreeView"
+                             IsCheckedPath="IsChecked"
+                             ParentPath="Parent"
+                             ItemsSource="{Binding Items}" 
+                             SelectedItem="{Binding SelectedItem}"  
+                             ItemTemplate="{StaticResource treeViewDataTemplate}" >
+        </tv:ComboBoxTreeView>
+        <!--<ComboBox   ItemsSource="{Binding Items}" 
+                             SelectedItem="{Binding SelectedItem}"  
+                             ItemTemplate="{StaticResource treeViewDataTemplate}">
+            
+        </ComboBox>-->
+    </UniformGrid>
     
     
 </UserControl>
