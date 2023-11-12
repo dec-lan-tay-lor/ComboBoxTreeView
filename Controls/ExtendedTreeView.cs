@@ -21,6 +21,7 @@ namespace Controls
             if (this.OnHierarchyMouseUp != null)
             {
                 this.OnHierarchyMouseUp(this, e);
+                e.Handled = true;
             }
         }
 
@@ -39,6 +40,7 @@ namespace Controls
             if (this.OnHierarchyMouseUp != null)
             {
                 this.OnHierarchyMouseUp(this, e);
+                e.Handled = true;
             }
         }
 

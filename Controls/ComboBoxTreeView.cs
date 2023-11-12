@@ -4,21 +4,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Controls
-{ 
+{
 
     public class ComboBoxTreeView : ComboBox
     {
         public static readonly DependencyProperty SelectedHierarchyProperty = DependencyProperty.Register("SelectedHierarchy", typeof(IEnumerable), typeof(ComboBoxTreeView), new PropertyMetadata(null));
         public static readonly DependencyProperty ParentPathProperty = DependencyProperty.Register("ParentPath", typeof(string), typeof(ComboBoxTreeView), new PropertyMetadata());
+        public static readonly DependencyProperty SelectedNodeProperty = DependencyProperty.Register("SelectedNode", typeof(object), typeof(ComboBoxTreeView), new FrameworkPropertyMetadata(default));
 
         private ExtendedTreeView _treeView;
 
         static ComboBoxTreeView()
         {
-           DefaultStyleKeyProperty.OverrideMetadata(typeof(ComboBoxTreeView), new FrameworkPropertyMetadata(typeof(ComboBoxTreeView)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(ComboBoxTreeView), new FrameworkPropertyMetadata(typeof(ComboBoxTreeView)));
         }
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
@@ -28,24 +30,22 @@ namespace Controls
 
         public override void OnApplyTemplate()
         {
-            base.OnApplyTemplate();
-
             _treeView = (ExtendedTreeView)this.GetTemplateChild("treeView");
             _treeView.OnHierarchyMouseUp += new MouseEventHandler(OnTreeViewHierarchyMouseUp);
-            this.SetSelectedItemToHeader();
+            this.UpdateSelectedItem();
+            base.OnApplyTemplate();
         }
-
+   
         protected override void OnDropDownClosed(EventArgs e)
         {
             base.OnDropDownClosed(e);
-            //this.SelectedItem = _treeView.SelectedItem;
-            this.SetSelectedItemToHeader();
+            this.UpdateSelectedItem();
         }
 
         protected override void OnDropDownOpened(EventArgs e)
         {
             base.OnDropDownOpened(e);
-            this.SetSelectedItemToHeader();
+            this.UpdateSelectedItem();
         }
 
         /// <summary>
@@ -54,16 +54,21 @@ namespace Controls
         private void OnTreeViewHierarchyMouseUp(object sender, MouseEventArgs e)
         {
             //This line isn't obligatory because it is executed in the OnDropDownClosed method, but be it so
-            this.SelectedItem = _treeView.SelectedItem;
+            var hierarchy = selectedHierarchy();
+            this.SelectedItem = hierarchy.First();
+            this.SelectedHierarchy = hierarchy;
             UpdateSelectedItem();
             this.IsDropDownOpen = false;
+            this.SelectedNode = _treeView.SelectedItem;
+   
         }
 
         #region properties
-        public new object SelectedItem
+
+        public object SelectedNode
         {
-            get { return (object)GetValue(SelectedItemProperty); }
-            set { SetValue(SelectedItemProperty, value); }
+            get { return (object)GetValue(SelectedNodeProperty); }
+            set { SetValue(SelectedNodeProperty, value); }
         }
 
         public IEnumerable SelectedHierarchy
@@ -81,42 +86,24 @@ namespace Controls
 
         private void UpdateSelectedItem()
         {
-            if (this.SelectedItem is TreeViewItem)
+            if (_treeView.SelectedItem != null)
             {
-                //I would rather use a correct object instead of TreeViewItem
-                this.SelectedItem = ((TreeViewItem)this.SelectedItem).DataContext;
-            }
-            else 
-            {
-                //Update the selected hierarchy and displays
-                this.SetSelectedItemToHeader();
+                var hierarchy = selectedHierarchy();
+                SelectedHierarchy = hierarchy;
+                SelectedNode = hierarchy.Last();
             }
         }
+
         private object[] selectedHierarchy()
         {
             var type = _treeView.SelectedItem.GetType();
             var propInfo = type.GetProperty(ParentPath);
             return TreeHelper.GetAncestors(_treeView.SelectedItem, a => propInfo.GetValue(a)).Reverse().ToArray();
         }
-
-
-        /// <summary>
-        /// Gets the hierarchy of the selected tree item and displays it at the combobox header
-        /// </summary>
-        private void SetSelectedItemToHeader()
-        {
-            string content = null;
-            if (this.SelectedItem != null)
-            {
-                SelectedHierarchy = selectedHierarchy();         
-            }
-        }
     }
-
 
     static class TreeHelper
     {
-
         public static IEnumerable<object> GetAncestors(object vm, Func<object, object> parent)
         {
             yield return vm;
@@ -126,6 +113,5 @@ namespace Controls
                 vm = parent(vm);
             }
         }
-
     }
 }

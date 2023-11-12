@@ -17,14 +17,14 @@
                     <TextBlock Text="{Binding Title}"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Border>
             </HierarchicalDataTemplate>
-            <ResourceDictionary.MergedDictionaries>
+            <!--<ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Controls;component/ComboBoxTreeView.xaml"></ResourceDictionary>
-            </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary.MergedDictionaries>-->
         </ResourceDictionary>
     </FrameworkElement.Resources>
     
     <Grid>
-        <tv:ComboBoxTreeView 
+        <tv:ComboBoxTreeView x:Name="ComboBoxTreeView"
 
                              ParentPath="Parent"
                              ItemsSource="{Binding Items}" 
@@ -32,4 +32,6 @@
                              ItemTemplate="{StaticResource treeViewDataTemplate}" >
         </tv:ComboBoxTreeView>
     </Grid>
+    
+    
 </UserControl>

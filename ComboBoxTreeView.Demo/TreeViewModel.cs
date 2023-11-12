@@ -100,5 +100,13 @@ namespace ComboBoxTreeView.Demo
             }
         }
 
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is TreeViewModel viewModel)
+                return Title.Equals(viewModel.Title);
+            return false;
+        }
+
     }
 }
