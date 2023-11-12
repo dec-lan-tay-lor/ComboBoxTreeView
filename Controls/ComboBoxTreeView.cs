@@ -53,7 +53,6 @@ namespace Controls
         /// </summary>
         private void OnTreeViewHierarchyMouseUp(object sender, MouseEventArgs e)
         {
-            //This line isn't obligatory because it is executed in the OnDropDownClosed method, but be it so
             var hierarchy = selectedHierarchy();
             this.SelectedItem = hierarchy.First();
             this.SelectedHierarchy = hierarchy;
